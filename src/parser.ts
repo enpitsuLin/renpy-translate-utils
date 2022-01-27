@@ -6,42 +6,30 @@ const REGEX_SOURCE = /^# ((?:.+[\/|\\])+.+\.\w+):+(\d+)/;
 const REGEX_META = /^translate (\w+) (.+):/;
 const REGEX_SAY = /^(?:#\s)?("?.+?"?\s)?"(.*?)"(\snointeract)?(\swith (?:[^\s]*))?$/;
 
-const parseSayLine = (line) => {
+const parseSayLine = (line: string) => {
   const reg = line.match(REGEX_SAY);
-  let who = null;
-  let what = "";
-  let nointeract = false;
-  let withEffect = "";
 
   if (!reg) return null;
 
-  who = reg[1];
-  what = reg[2];
-  nointeract = reg[3] === " nointeract";
-  withEffect = (reg[4] || "").trim();
+  let [, who = null, what = "", nointeract, withEffect = ""] = reg;
 
   if (who) who = who.trim();
   what = what.trim();
+  withEffect = withEffect.trim();
 
   return {
     who,
     what,
     with: withEffect,
-    nointeract
+    nointeract: nointeract == " nointeract"
   };
 };
 
-const parseSource = (line) => {
-  const reg = line.match(REGEX_SOURCE);
-
+const parseSource = (str: string) => {
+  const reg = str.match(REGEX_SOURCE);
   if (!reg) return null;
-
-  const [, file, lineNum] = reg;
-
-  return {
-    file,
-    line: lineNum
-  };
+  const [, file, line] = reg;
+  return { file, line };
 };
 
 /**
@@ -169,7 +157,6 @@ interface Folder {
   type: string;
   children?: (string | Folder)[];
 }
-
 
 /**
  * process `language folder` to parse all language file
