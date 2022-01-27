@@ -1,30 +1,29 @@
-const groupBy = require('lodash.groupby');
-const Mustache = require('mustache');
-
-const templates = require('./templates');
+import groupBy from "lodash.groupby";
+import Mustache from "mustache";
+import templates from "./templates";
 
 const generateDefaults = {
-  language: 'english',
+  language: "english",
   templates
 };
 
-module.exports = {
+const generator = {
   /**
    * Generate Ren'Py translation file
-   * 
+   *
    * @param {array} data Array of blocks from parser
    * @param {object} [options] Options
    * @param {string} [options.language] New language
    * @return {string}
    */
-  generateFile (data, options = {}) {
+  generateFile(data, options = {}) {
     const realOptions = {
       ...generateDefaults,
       ...options
     };
     const { language } = realOptions;
 
-    const grouppedData = groupBy(data, 'type');
+    const grouppedData = groupBy(data, "type");
 
     const renderData = {
       ...grouppedData,
@@ -36,4 +35,6 @@ module.exports = {
 
     return text;
   }
-}
+};
+
+export default generator;

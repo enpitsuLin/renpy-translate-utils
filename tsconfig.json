@@ -3,7 +3,8 @@
     "target": "ES2015",
     "module": "commonjs",
     "allowJs": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "esModuleInterop": true
   },
   "include": ["src", "test"],
   "exclude": ["node_module"]
