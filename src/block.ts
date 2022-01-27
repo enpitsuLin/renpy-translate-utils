@@ -15,7 +15,7 @@ export interface BlockData {
   with: string;
 }
 
-export type BlockType = "say" | "string";
+export type BlockType = 'say' | 'string';
 
 export interface BlockBase {
   type: BlockType;
@@ -37,13 +37,13 @@ export interface StringBlockMeta {
 }
 
 export interface SayBlock extends BlockBase {
-  type: "say";
+  type: 'say';
   meta: SayBlockMeta;
   pass: boolean;
 }
 
 export interface StringBlock extends BlockBase {
-  type: "string";
+  type: 'string';
   meta: StringBlockMeta;
 }
 

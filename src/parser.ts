@@ -1,6 +1,6 @@
-import { readFile, readdir, stat } from "fs/promises";
-import { Block } from "./block";
-import path from "path";
+import { readFile, readdir, stat } from 'fs/promises';
+import { Block } from './block';
+import path from 'path';
 
 const REGEX_SOURCE = /^# ((?:.+[\/|\\])+.+\.\w+):+(\d+)/;
 const REGEX_META = /^translate (\w+) (.+):/;
@@ -14,7 +14,7 @@ function parseSayLine(line: string) {
 
   if (!reg) return null;
 
-  let [, who = null, what = "", nointeract, withEffect = ""] = reg;
+  let [, who = null, what = '', nointeract, withEffect = ''] = reg;
 
   if (who) who = who.trim();
   what = what.trim();
@@ -24,7 +24,7 @@ function parseSayLine(line: string) {
     who,
     what,
     with: withEffect,
-    nointeract: nointeract == " nointeract"
+    nointeract: nointeract == ' nointeract'
   };
 }
 
@@ -46,9 +46,9 @@ function parseSource(str: string) {
  * @return Array of blocks with info
  */
 export async function parseFile(filePath: string): Promise<Block[]> {
-  if (!filePath) throw new Error("File path is missing.");
+  if (!filePath) throw new Error('File path is missing.');
 
-  const fileContent = await readFile(filePath, "utf8");
+  const fileContent = await readFile(filePath, 'utf8');
 
   return parseFileContent(fileContent);
 }
@@ -62,12 +62,12 @@ export async function parseFile(filePath: string): Promise<Block[]> {
 export function parseFileContent(file: string): Block[] {
   const lines = file.split(/\r|\n/);
   const blocks: Block[] = [];
-  let currentLanguage = "";
+  let currentLanguage = '';
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i].trim();
 
-    if (line.startsWith("translate ")) {
+    if (line.startsWith('translate ')) {
       if (line.match(/strings:/)) {
         // This catch language for strings
         const [, lang] = line.match(REGEX_META);
@@ -84,23 +84,23 @@ export function parseFileContent(file: string): Block[] {
       if (i > 0) {
         const prevLine = lines[i - 1].trim();
 
-        if (prevLine.startsWith("# ")) {
+        if (prevLine.startsWith('# ')) {
           source = parseSource(prevLine);
         }
       }
 
       line = lines[++i].trim();
-      if (line === "") line = lines[++i].trim();
+      if (line === '') line = lines[++i].trim();
 
-      if (line.startsWith("# ")) {
+      if (line.startsWith('# ')) {
         original = parseSayLine(line);
       }
 
       let pass = false;
       line = lines[++i].trim();
-      if (line !== "pass" && line.match(REGEX_SAY)) {
+      if (line !== 'pass' && line.match(REGEX_SAY)) {
         translated = parseSayLine(line);
-      } else if (line === "pass") {
+      } else if (line === 'pass') {
         pass = true;
       }
 
@@ -113,19 +113,19 @@ export function parseFileContent(file: string): Block[] {
       }
 
       blocks.push({
-        type: "say",
+        type: 'say',
         meta: { lang, id, source, nointeract },
         original,
         translated,
         pass
       });
-    } else if (line.startsWith("old")) {
+    } else if (line.startsWith('old')) {
       let source = null;
 
       if (i > 0) {
         const prevLine = lines[i - 1].trim();
 
-        if (prevLine.startsWith("# ")) {
+        if (prevLine.startsWith('# ')) {
           source = parseSource(prevLine);
         }
       }
@@ -139,7 +139,7 @@ export function parseFileContent(file: string): Block[] {
       delete translated.who;
 
       blocks.push({
-        type: "string",
+        type: 'string',
         meta: { source, lang: currentLanguage },
         original,
         translated
@@ -163,7 +163,7 @@ interface Folder {
 export async function parseLanguageFolder(folderPath: string) {
   const data: Folder = {
     path: folderPath,
-    type: "folder",
+    type: 'folder',
     children: []
   };
 
@@ -174,15 +174,15 @@ export async function parseLanguageFolder(folderPath: string) {
     children.map(async (file) => {
       let fileObj = {
         path: path.join(folderPath, file),
-        type: "file"
+        type: 'file'
       };
 
       const stats = await stat(fileObj.path);
 
       if (stats.isDirectory()) {
         fileObj = await parseLanguageFolder(fileObj.path);
-      } else if (fileObj.path.endsWith(".rpy")) {
-        fileObj.type = "file";
+      } else if (fileObj.path.endsWith('.rpy')) {
+        fileObj.type = 'file';
       }
 
       data.children.push(fileObj);

@@ -1,0 +1,9 @@
+{
+  "printWidth": 120,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "trailingComma": "none",
+  "singleQuote": true,
+  "tabWidth": 2,
+  "eslintIntegration": true
+}

@@ -1,9 +1,9 @@
-import groupBy from "lodash.groupby";
-import Mustache from "mustache";
-import templates from "./templates";
+import groupBy from 'lodash.groupby';
+import Mustache from 'mustache';
+import templates from './templates';
 
 const generateDefaults = {
-  language: "english",
+  language: 'english',
   templates
 };
 
@@ -23,7 +23,7 @@ const generator = {
     };
     const { language } = realOptions;
 
-    const grouppedData = groupBy(data, "type");
+    const grouppedData = groupBy(data, 'type');
 
     const renderData = {
       ...grouppedData,
