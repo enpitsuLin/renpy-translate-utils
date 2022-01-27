@@ -1,5 +1,5 @@
 import { readFile, readdir, stat } from 'fs/promises';
-import { Block } from './block';
+import { Block } from './types/block';
 import path from 'path';
 
 const REGEX_SOURCE = /^# ((?:.+[\/|\\])+.+\.\w+):+(\d+)/;

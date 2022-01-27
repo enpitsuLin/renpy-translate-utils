@@ -2,11 +2,11 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "commonjs",
-    "allowJs": true,
     "baseUrl": ".",
+    "declaration": true,
     "esModuleInterop": true,
     "outDir": "./build/"
   },
-  "include": ["src", "tests"],
+  "include": ["src"],
   "exclude": ["node_module"]
 }
