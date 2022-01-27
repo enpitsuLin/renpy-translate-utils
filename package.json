@@ -4,7 +4,8 @@
   "description": "Parse Ren'Py translation files",
   "main": "index.js",
   "scripts": {
-    "test": "node ./tests/test.js"
+    "test": "node ./tests/test.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

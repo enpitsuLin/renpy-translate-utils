@@ -4,8 +4,9 @@
     "module": "commonjs",
     "allowJs": true,
     "baseUrl": ".",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "outDir": "./build/"
   },
-  "include": ["src", "test"],
+  "include": ["src", "tests"],
   "exclude": ["node_module"]
 }

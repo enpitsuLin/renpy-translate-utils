@@ -1,12 +1,15 @@
 import { readFile, readdir, stat } from "fs/promises";
-import path from "path";
 import { Block } from "./block";
+import path from "path";
 
 const REGEX_SOURCE = /^# ((?:.+[\/|\\])+.+\.\w+):+(\d+)/;
 const REGEX_META = /^translate (\w+) (.+):/;
 const REGEX_SAY = /^(?:#\s)?("?.+?"?\s)?"(.*?)"(\snointeract)?(\swith (?:[^\s]*))?$/;
 
-const parseSayLine = (line: string) => {
+/**
+ * parse dialog saying line
+ */
+function parseSayLine(line: string) {
   const reg = line.match(REGEX_SAY);
 
   if (!reg) return null;
@@ -23,23 +26,26 @@ const parseSayLine = (line: string) => {
     with: withEffect,
     nointeract: nointeract == " nointeract"
   };
-};
+}
 
-const parseSource = (str: string) => {
+/**
+ * parse source
+ */
+function parseSource(str: string) {
   const reg = str.match(REGEX_SOURCE);
   if (!reg) return null;
   const [, file, line] = reg;
   return { file, line };
-};
+}
 
 /**
  * Parse Ren'Py translation file
  *
  * @async
- * @param {string} filePath Path to the file
- * @return {Promise<array>} Array of blocks with info
+ * @param filePath Path to the file
+ * @return Array of blocks with info
  */
-export async function parseFile(filePath: string) {
+export async function parseFile(filePath: string): Promise<Block[]> {
   if (!filePath) throw new Error("File path is missing.");
 
   const fileContent = await readFile(filePath, "utf8");
@@ -50,10 +56,10 @@ export async function parseFile(filePath: string) {
 /**
  * Parse Ren'Py translation file
  *
- * @param {string} file File content
- * @return {array} Array of blocks with info
+ * @param file File content
+ * @return Array of blocks with info
  */
-export function parseFileContent(file: string): any[] {
+export function parseFileContent(file: string): Block[] {
   const lines = file.split(/\r|\n/);
   const blocks: Block[] = [];
   let currentLanguage = "";
@@ -108,16 +114,11 @@ export function parseFileContent(file: string): any[] {
 
       blocks.push({
         type: "say",
-        meta: {
-          lang,
-          id,
-          source,
-          nointeract
-        },
+        meta: { lang, id, source, nointeract },
         original,
         translated,
         pass
-      } as Block);
+      });
     } else if (line.startsWith("old")) {
       let source = null;
 
@@ -139,13 +140,10 @@ export function parseFileContent(file: string): any[] {
 
       blocks.push({
         type: "string",
-        meta: {
-          source,
-          lang: currentLanguage
-        },
+        meta: { source, lang: currentLanguage },
         original,
         translated
-      } as Block);
+      });
     }
   }
 

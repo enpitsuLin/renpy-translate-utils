@@ -1,12 +1,12 @@
 import path from "path";
-import parser from "../src/parser";
+import { parseFile } from "../src/parser";
 import generator from "../src/generator";
 
 (async () => {
   const file = path.join(__dirname, "simple.rpy");
-  const blocks = await parser.parseFile(file);
+  const blocks = await parseFile(file);
 
-  console.log(blocks);
+  console.dir(blocks, { depth: 4 });
 
   const newFile = generator.generateFile(blocks, { language: "spanish" });
 
