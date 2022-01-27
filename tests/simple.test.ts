@@ -1,6 +1,5 @@
 import { resolve } from 'path';
-import { parseFile } from '../src/parser';
-import generator from '../src/generator';
+import { generator, parser } from '../';
 
 const simple = resolve(__dirname, './simple.rpy');
 // prettier-ignore
@@ -8,7 +7,7 @@ const simpleBlocks = [{"meta": {"id": "start_360a07ac", "lang": "english", "noin
 
 describe('parseFile', () => {
   it('parseFile', async () => {
-    const blocks = await parseFile(simple);
+    const blocks = await parser.parseFile(simple);
     expect(blocks).toEqual(simpleBlocks);
   });
 });

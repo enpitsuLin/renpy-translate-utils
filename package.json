@@ -2,9 +2,10 @@
   "name": "renpy-translate-utils",
   "version": "1.2.1",
   "description": "Parse Ren'Py translation files",
-  "main": "index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "test": "node ./tests/test.js",
+    "test": "npm run build && jest",
     "build": "tsc"
   },
   "repository": {
