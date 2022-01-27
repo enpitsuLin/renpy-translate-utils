@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DinakiS/renpy-translate-utils"
+    "url": "https://github.com/enpitsuLin/renpy-translate-utils"
   },
   "keywords": [
     "renpy",
@@ -16,9 +16,9 @@
     "rpy",
     "rpyc"
   ],
-  "author": "Dinaki",
+  "author": "enpitsuLin",
   "license": "ISC",
-  "homepage": "https://github.com/DinakiS/renpy-translate-utils",
+  "homepage": "https://github.com/enpitsuLin/renpy-translate-utils",
   "dependencies": {
     "lodash.groupby": "^4.6.0",
     "mustache": "^3.0.1"
