@@ -1,14 +1,26 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@types/node': ^17.0.12
   lodash.groupby: ^4.6.0
   mustache: ^3.0.1
+  typescript: ^4.5.5
 
 dependencies:
   lodash.groupby: registry.npmmirror.com/lodash.groupby/4.6.0
   mustache: registry.npmmirror.com/mustache/3.2.1
 
+devDependencies:
+  '@types/node': registry.npmmirror.com/@types/node/17.0.12
+  typescript: registry.npmmirror.com/typescript/4.5.5
+
 packages:
+
+  registry.npmmirror.com/@types/node/17.0.12:
+    resolution: {integrity: sha512-4YpbAsnJXWYK/fpTVFlMIcUIho2AYCi4wg5aNPrG1ng7fn/1/RZfCIpRCiBX+12RVa34RluilnvCqD+g3KiSiA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/node/download/@types/node-17.0.12.tgz}
+    name: '@types/node'
+    version: 17.0.12
+    dev: true
 
   registry.npmmirror.com/lodash.groupby/4.6.0:
     resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash.groupby/download/lodash.groupby-4.6.0.tgz}
@@ -23,3 +35,11 @@ packages:
     engines: {npm: '>=1.4.0'}
     hasBin: true
     dev: false
+
+  registry.npmmirror.com/typescript/4.5.5:
+    resolution: {integrity: sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/typescript/download/typescript-4.5.5.tgz}
+    name: typescript
+    version: 4.5.5
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
