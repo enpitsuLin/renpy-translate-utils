@@ -44,164 +44,165 @@ const parseSource = (line) => {
   };
 };
 
-const parser = {
-  /**
-   * Parse Ren'Py translation file
-   *
-   * @async
-   * @param {string} filePath Path to the file
-   * @return {Promise<array>} Array of blocks with info
-   */
-  async parseFile(filePath: string) {
-    if (!filePath) throw new Error("File path is missing.");
+/**
+ * Parse Ren'Py translation file
+ *
+ * @async
+ * @param {string} filePath Path to the file
+ * @return {Promise<array>} Array of blocks with info
+ */
+export async function parseFile(filePath: string) {
+  if (!filePath) throw new Error("File path is missing.");
 
-    const fileContent = await readFile(filePath, "utf8");
+  const fileContent = await readFile(filePath, "utf8");
 
-    return this.parseFileContent(fileContent);
-  },
+  return parseFileContent(fileContent);
+}
 
-  /**
-   * Parse Ren'Py translation file
-   *
-   * @param {string} file File content
-   * @return {array} Array of blocks with info
-   */
-  parseFileContent(file: string): any[] {
-    const lines = file.split(/\r|\n/);
-    const blocks: Block[] = [];
-    let currentLanguage = "";
+/**
+ * Parse Ren'Py translation file
+ *
+ * @param {string} file File content
+ * @return {array} Array of blocks with info
+ */
+export function parseFileContent(file: string): any[] {
+  const lines = file.split(/\r|\n/);
+  const blocks: Block[] = [];
+  let currentLanguage = "";
 
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i].trim();
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
 
-      if (line.startsWith("translate ")) {
-        if (line.match(/strings:/)) {
-          // This catch language for strings
-          const [, lang] = line.match(REGEX_META);
+    if (line.startsWith("translate ")) {
+      if (line.match(/strings:/)) {
+        // This catch language for strings
+        const [, lang] = line.match(REGEX_META);
 
-          currentLanguage = lang;
-          continue;
-        }
-
-        const [, lang, id] = line.match(REGEX_META);
-        let source = null;
-        let original = null;
-        let translated = null;
-
-        if (i > 0) {
-          const prevLine = lines[i - 1].trim();
-
-          if (prevLine.startsWith("# ")) {
-            source = parseSource(prevLine);
-          }
-        }
-
-        line = lines[++i].trim();
-        if (line === "") line = lines[++i].trim();
-
-        if (line.startsWith("# ")) {
-          original = parseSayLine(line);
-        }
-
-        let pass = false;
-        line = lines[++i].trim();
-        if (line !== "pass" && line.match(REGEX_SAY)) {
-          translated = parseSayLine(line);
-        } else if (line === "pass") {
-          pass = true;
-        }
-
-        let nointeract = false;
-
-        if (original) {
-          nointeract = original.nointeract;
-          delete original.nointeract;
-          if (translated) delete translated.nointeract;
-        }
-
-        blocks.push({
-          type: "say",
-          meta: {
-            lang,
-            id,
-            source,
-            nointeract
-          },
-          original,
-          translated,
-          pass
-        } as Block);
-      } else if (line.startsWith("old")) {
-        let source = null;
-
-        if (i > 0) {
-          const prevLine = lines[i - 1].trim();
-
-          if (prevLine.startsWith("# ")) {
-            source = parseSource(prevLine);
-          }
-        }
-
-        const original = parseSayLine(line);
-        delete original.who;
-
-        line = lines[++i].trim();
-
-        const translated = parseSayLine(line);
-        delete translated.who;
-
-        blocks.push({
-          type: "string",
-          meta: {
-            source,
-            lang: currentLanguage
-          },
-          original,
-          translated
-        } as Block);
+        currentLanguage = lang;
+        continue;
       }
-    }
 
-    return blocks;
-  },
+      const [, lang, id] = line.match(REGEX_META);
+      let source = null;
+      let original = null;
+      let translated = null;
 
-  async parseLanguageFolder(folderPath: string) {
-    const data = {
-      path: folderPath,
-      type: "folder",
-      children: [],
-      files: []
-    };
+      if (i > 0) {
+        const prevLine = lines[i - 1].trim();
 
-    const children = await readdir(folderPath);
-    data.children = children;
-
-    data.files = [];
-
-    await Promise.all(
-      children.map(async (file) => {
-        let fileObj = {
-          path: path.join(folderPath, file),
-          type: "",
-          data: undefined
-        };
-
-        const stats = await stat(fileObj.path);
-
-        if (stats.isDirectory()) {
-          fileObj = await this.parseLanguageFolder(fileObj.path);
-        } else if (fileObj.path.endsWith(".rpy")) {
-          fileObj.type = "file";
-
-          fileObj.data = await this.parseFile(fileObj.path);
+        if (prevLine.startsWith("# ")) {
+          source = parseSource(prevLine);
         }
+      }
 
-        data.files.push(fileObj);
-      })
-    );
+      line = lines[++i].trim();
+      if (line === "") line = lines[++i].trim();
 
-    return data;
+      if (line.startsWith("# ")) {
+        original = parseSayLine(line);
+      }
+
+      let pass = false;
+      line = lines[++i].trim();
+      if (line !== "pass" && line.match(REGEX_SAY)) {
+        translated = parseSayLine(line);
+      } else if (line === "pass") {
+        pass = true;
+      }
+
+      let nointeract = false;
+
+      if (original) {
+        nointeract = original.nointeract;
+        delete original.nointeract;
+        if (translated) delete translated.nointeract;
+      }
+
+      blocks.push({
+        type: "say",
+        meta: {
+          lang,
+          id,
+          source,
+          nointeract
+        },
+        original,
+        translated,
+        pass
+      } as Block);
+    } else if (line.startsWith("old")) {
+      let source = null;
+
+      if (i > 0) {
+        const prevLine = lines[i - 1].trim();
+
+        if (prevLine.startsWith("# ")) {
+          source = parseSource(prevLine);
+        }
+      }
+
+      const original = parseSayLine(line);
+      delete original.who;
+
+      line = lines[++i].trim();
+
+      const translated = parseSayLine(line);
+      delete translated.who;
+
+      blocks.push({
+        type: "string",
+        meta: {
+          source,
+          lang: currentLanguage
+        },
+        original,
+        translated
+      } as Block);
+    }
   }
-};
 
-export default parser;
+  return blocks;
+}
+
+interface Folder {
+  path: string;
+  type: string;
+  children?: (string | Folder)[];
+}
+
+
+/**
+ * process `language folder` to parse all language file
+ * @desc WIP
+ */
+export async function parseLanguageFolder(folderPath: string) {
+  const data: Folder = {
+    path: folderPath,
+    type: "folder",
+    children: []
+  };
+
+  const children = await readdir(folderPath);
+  data.children = children;
+
+  await Promise.all(
+    children.map(async (file) => {
+      let fileObj = {
+        path: path.join(folderPath, file),
+        type: "file"
+      };
+
+      const stats = await stat(fileObj.path);
+
+      if (stats.isDirectory()) {
+        fileObj = await parseLanguageFolder(fileObj.path);
+      } else if (fileObj.path.endsWith(".rpy")) {
+        fileObj.type = "file";
+      }
+
+      data.children.push(fileObj);
+    })
+  );
+
+  return data;
+}
