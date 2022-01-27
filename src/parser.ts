@@ -1,5 +1,6 @@
 import { readFile, readdir, stat } from "fs/promises";
 import path from "path";
+import { Block } from "./block";
 
 const REGEX_SOURCE = /^# ((?:.+[\/|\\])+.+\.\w+):+(\d+)/;
 const REGEX_META = /^translate (\w+) (.+):/;
@@ -67,7 +68,7 @@ const parser = {
    */
   parseFileContent(file: string): any[] {
     const lines = file.split(/\r|\n/);
-    const blocks = [];
+    const blocks: Block[] = [];
     let currentLanguage = "";
 
     for (let i = 0; i < lines.length; i++) {
@@ -129,7 +130,7 @@ const parser = {
           original,
           translated,
           pass
-        });
+        } as Block);
       } else if (line.startsWith("old")) {
         let source = null;
 
@@ -157,7 +158,7 @@ const parser = {
           },
           original,
           translated
-        });
+        } as Block);
       }
     }
 
