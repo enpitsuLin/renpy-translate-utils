@@ -16,7 +16,7 @@ const generator = {
    * @param {string} [options.language] New language
    * @return {string}
    */
-  generateFile(data, options = {}) {
+  generateFile(data: any[], options = {}) {
     const realOptions = {
       ...generateDefaults,
       ...options

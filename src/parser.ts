@@ -51,7 +51,7 @@ const parser = {
    * @param {string} filePath Path to the file
    * @return {Promise<array>} Array of blocks with info
    */
-  async parseFile(filePath) {
+  async parseFile(filePath: string) {
     if (!filePath) throw new Error("File path is missing.");
 
     const fileContent = await readFile(filePath, "utf8");
@@ -65,10 +65,9 @@ const parser = {
    * @param {string} file File content
    * @return {array} Array of blocks with info
    */
-  parseFileContent(file) {
-    const lines = file.split("\r\n");
+  parseFileContent(file: string): any[] {
+    const lines = file.split(/\r|\n/);
     const blocks = [];
-
     let currentLanguage = "";
 
     for (let i = 0; i < lines.length; i++) {
@@ -165,7 +164,7 @@ const parser = {
     return blocks;
   },
 
-  async parseLanguageFolder(folderPath) {
+  async parseLanguageFolder(folderPath: string) {
     const data = {
       path: folderPath,
       type: "folder",
